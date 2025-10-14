@@ -1,3 +1,5 @@
+import ms from 'ms'
+
 // ======================== Configuración Google APIs ========================
 const clientId = "64713983477-nk4rmn95cgjsnab4gmp44dpjsdp1brk2.apps.googleusercontent.com";
 const SPREADSHEET_ID = "1T8YifEIUU7a6ugf_Xn5_1edUUMoYfM9loDuOQU1u2-8";
@@ -461,12 +463,35 @@ function showStatus(msg, type = "info") {
     return;
   }
   
+  box.innerHTML = '';
+
+  const msgText = document.createElement('span');
+  msgText.textContent = msg;
+  msgText.style.flexGrow = 1;
+
+  const closeBtn = document.createElement('button');
+  closeBtn.textContent = 'x';
+  closeBtn.className = "close-status-btn";
+  closeBtn.setAttribute('aria-label', 'Cerrar mensaje');
+
+  closeBtn.addEventListener('click', () => {
+    box.style.display = 'none';
+    clearTimeout(box.timer);
+  });
+
+  box.appendChild(msgText);
+  box.appendChild(closeBtn);
+
   box.className = `status-message ${type}`;
-  box.textContent = msg;
-  box.style.display = "block";
+  box.style.display = "flex";
   
-  const timeout = type === "error" ? 8000 : 50000;
-  setTimeout(() => box.style.display = "none", timeout);
+  const timeout = type === "error" ? 8000 : 5000;
+
+  if (box.timer) clearTimeout(box.timer);
+
+  box.timer = setTimeout(() => {
+    box.style.display = "none"; 
+  }, timeoutDuration);
 }
 
 // Barra de carga para uploads
@@ -1236,7 +1261,8 @@ async function sendFormDataToSheets(data) {
       throw new Error(result.error || `Error al guardar datos. Código: ${response.status}`);
     }
 
-    console.log('Datos guardados por el backend exitosamente. IDde cliente:', result.clientId);
+    console.log('Datos guardados por el backend exitosamente. ID de cliente:', result.clientId);
+    return result
    } catch (error) {
     console.error('Error detallado en sendFormDataToSheets:', error);
     throw new Error(`Error enviando datos: ${error.message}`);
