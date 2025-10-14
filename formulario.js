@@ -1,3 +1,5 @@
+import ms from 'ms'
+
 // ======================== Configuración Google APIs ========================
 const clientId = "64713983477-nk4rmn95cgjsnab4gmp44dpjsdp1brk2.apps.googleusercontent.com";
 const SPREADSHEET_ID = "1T8YifEIUU7a6ugf_Xn5_1edUUMoYfM9loDuOQU1u2-8";
