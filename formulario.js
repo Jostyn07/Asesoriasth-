@@ -1,3 +1,5 @@
+const { error } = require("console");
+
 // ======================== Configuración Google APIs ========================
 const clientId = "64713983477-nk4rmn95cgjsnab4gmp44dpjsdp1brk2.apps.googleusercontent.com";
 const SPREADSHEET_ID = "1T8YifEIUU7a6ugf_Xn5_1edUUMoYfM9loDuOQU1u2-8";
@@ -1169,6 +1171,7 @@ function collectData() {
     claveSeguridad: $("#claveSeguridad")?.value?.trim() || "",
     observaciones: $("#observaciones")?.value?.trim() || "",
     metodoPago: $("#pagoBanco")?.checked ? "banco" : $("#pagoTarjeta")?.checked ? "tarjeta" : "",
+    pagoObservacionTarjeta: $("pagoObservacionTarjeta")?.value?.trim() || "",
     pagoBanco: {
       numCuenta: $("#numCuenta")?.value?.trim() || "",
       numRuta: $("#numRuta")?.value?.trim() || "",
@@ -1213,227 +1216,49 @@ function validateClientData() {
 }
 
 // =================================== API ===================================
-const BACKEND_URL = "https://asesoriasth-backend.onrender.com/api"; // Cambia esto a tu URL real
+const BACKEND_URL = "https://asesoriasth-backend-88xb.onrender.com"; // Cambia esto a tu URL real
 
 async function sendFormDataToSheets(data) {
-  // Verificar autenticación antes de continuar
-  console.log("Enviando datos a Sheets...", data);
-  showStatus("Enviando datos a Google Sheets...", "info");
-  const authenticated = await ensureAuthenticated({ interactive: true });
-  
-  if (!authenticated) {
-    throw new Error("No estás autenticado. Por favor, inicia sesión de nuevo.");
-  }
-
-  let accessToken = localStorage.getItem("google_access_token");
-  if (!accessToken) {
-    throw new Error("Token de acceso no disponible. Inicia sesión.");
-  }
-  
-  const clientId = `CLI-${Date.now()}-${Math.random().toString(36).slice(2,8).toUpperCase()}`;
+  console.log("Enviando datos al Backend...", data);
+  showStatus("Enviando datos al servidor...", "info");
 
   try {
-    // 1. Enviar datos principales de Obamacare
-    const obamacareData = [
-      data.operador || '',
-      data.fechaRegistro || '',
-      data.tipoVenta || '',
-      data.claveSeguridad || '',
-      'Titular',
-      data.nombre || '',
-      data.apellidos || '',
-      data.sexo || '',
-      data.correo || '',
-      data.telefono || '',
-      data.fechaNacimiento || '',
-      data.estadoMigratorio || '',
-      data.ssn || '',
-      data.ingresos || '',
-      data.ocupación || '',
-      data.nacionalidad || '',
-      data.aplica || '',
-      data.cantidadDependientes || '0',
-      data.poBox || (data.direccion + (data.casaApartamento ? ', ' + data.casaApartamento : '') + ', ' + data.condado + ', ' + data.ciudad + ', ' + data.estado + ', ' + data.codigoPostal),
-      data.compania || '',
-      data.plan || '',
-      data.creditoFiscal || '',
-      data.prima || '',
-      data.link || '',
-      data.observaciones || '',
-      clientId,
-    ];
-
-    const obamacareUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${SHEET_NAME_OBAMACARE}!A1:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`;
-    
-    const obamacareResponse = await authenticatedFetch(obamacareUrl, {
+    const response = await fetch(`${BACKEND_URL}/submit-form-data`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type":  "application/json",
       },
-      body: JSON.stringify({
-        values: [obamacareData]
-      }),
+      body: JSON.stringify(data),
     });
 
-    if (!obamacareResponse.ok) {
-      const errorText = await obamacareResponse.text();
-      console.error('Error en Obamacare response:', errorText);
-      throw new Error(`Error al guardar datos de Obamacare: ${obamacareResponse.status} - ${errorText}`);
+    const result = await response.json();
+
+    if (!response.ok) {
+      console.error('Error del backend:', result.error);
+      throw new Error(result.error || `Error al guardar datos. Código: ${response.status}`);
     }
 
-    console.log('✅ Datos de Obamacare guardados exitosamente');
-
-    // 2. Enviar dependientes si existen
-    if (data.dependents && data.dependents.length > 0) {
-      const dependentsRows = data.dependents.map(dep => [
-        data.operador || '', 
-        data.fechaRegistro || '',
-        data.tipoVenta || '',
-        data.claveSeguridad || '',
-        dep.parentesco || '',
-        dep.nombre || '',
-        dep.apellido || '',
-        '', // Sexo
-        '', // Correo
-        '', // Teléfono
-        dep.fechaNacimiento || '',
-        dep.estadoMigratorio || '',
-        dep.ssn || '',
-        '', // Ingresos
-        '', // Ocupación
-        '', // Nacionalidad
-        dep.aplica || '',
-        '', // Cantidad de dependientes
-        '', // Dirección completa
-        '', // Compañía
-        '', '', '', '', '', // Campos vacíos
-        clientId
-      ]);
-
-      const dependentsResponse = await authenticatedFetch(obamacareUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ values: dependentsRows })
-      });
-
-      if (!dependentsResponse.ok) {
-        console.error('Error enviando dependientes, pero continuando...');
-      } else {
-        console.log('✅ Dependientes guardados exitosamente');
-      }
-    }
-
-    // 3. Enviar planes Cigna si existen
-    if (data.cignaPlans && data.cignaPlans.length > 0) {
-      const cignaValues = data.cignaPlans.map((p) => [
-        clientId,
-        new Date().toLocaleDateString('es-ES'),
-        p.parentesco || '',
-        `${data.nombre} ${data.apellidos}`,
-        data.telefono || '',
-        data.sexo || '',
-        p.fechaNacimiento || '',
-        data.poBox || (data.direccion + (data.casaApartamento ? ', ' + data.casaApartamento : '') + ', ' + data.condado + ', ' + data.ciudad + ', ' + data.codigoPostal),
-        data.correo || '',
-        data.estadoMigratorio || '',
-        data.ssn || '',
-        `${p.beneficiarioNombre || ''} / ${p.beneficiarioFechaNacimiento || ''} / ${p.beneficiarioDireccion || ''} / ${p.beneficiarioRelacion || ''}`,
-        p.tipo || '',
-        p.coberturaTipo || '',
-        p.beneficio || '',
-        p.beneficioDiario || '',
-        p.deducible || '',
-        p.prima || '',
-        p.comentarios || '',
-      ]);
-
-      const cignaUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${SHEET_NAME_CIGNA}!A1:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`;
-      
-      const cignaResponse = await authenticatedFetch(cignaUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          values: cignaValues
-        }),
-      });
-
-      if (!cignaResponse.ok) {
-        console.error('Error enviando datos Cigna, pero continuando...');
-      } else {
-        console.log('✅ Datos Cigna guardados exitosamente');
-      }
-    }
-
-    // 4. Enviar datos de pago si existen
-    if (data.metodoPago) {
-      let pagoData = [
-        clientId,
-        `${data.nombre} ${data.apellidos}`,
-        data.telefono || '',
-        data.metodoPago,
-      ];
-
-      if (data.metodoPago === "banco") {
-        pagoData = pagoData.concat([
-          data.pagoBanco.numCuenta || '',
-          data.pagoBanco.numRuta || '',
-          data.pagoBanco.nombreBanco || '',
-          data.pagoBanco.titularCuenta || '',
-          data.pagoBanco.socialCuenta || '',
-          data.observaciones || '',
-        ]);
-      } else if (data.metodoPago === "tarjeta") {
-        pagoData = pagoData.concat([
-          data.pagoTarjeta.numTarjeta || '',
-          data.pagoTarjeta.fechaVencimiento || '',
-          data.pagoTarjeta.titularTarjeta || '',
-          data.pagoTarjeta.cvc || '',
-          '', // Campo vacío para balance
-          data.observaciones || '',
-        ]);
-      }
-
-      const pagosUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${SHEET_NAME_PAGOS}!A1:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`;
-      
-      const pagosResponse = await authenticatedFetch(pagosUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          values: [pagoData]
-        }),
-      });
-
-      if (!pagosResponse.ok) {
-        console.error('Error enviando datos de pago, pero continuando...');
-      } else {
-        console.log('✅ Datos de pago guardados exitosamente');
-      }
-    }
-
-    return clientId;
-
-  } catch (error) {
+    console.log('Datos guardados por el backend exitosamente. IDde cliente:', result.clientId);
+   } catch (error) {
     console.error('Error detallado en sendFormDataToSheets:', error);
     throw new Error(`Error enviando datos: ${error.message}`);
   }
 }
 
-async function uploadFilesToBackend(files) {
+async function uploadFilesToBackend(files, folderNameFromSheets) {
   if (files.length === 0) return;
 
   showStatus("Creando carpeta en Drive...", "info");
   // 1. Crear la carpeta en Drive
   let folderId = null;
   try {
-    const nombre = window.lastFormData?.nombre || "";
-    const apellidos = window.lastFormData?.apellidos || "";
-    const folderName = `${nombre} ${apellidos} ${window.lastFormData?.telefono || ""}`.trim();
+    // const nombre = window.lastFormData?.nombre || "";
+    // const apellidos = window.lastFormData?.apellidos || "";
+    // const folderName = `${nombre} ${apellidos} ${window.lastFormData?.telefono || ""}`.trim();
+    const folderName = folderNameFromSheets;
+
+    if (!folderName) throw new Error("No se puedo generar el nombre de la carpeta");
+
     const res = await fetch(`${BACKEND_URL}/create-folder`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -1523,9 +1348,14 @@ async function onSubmit(e) {
       archivos: filesToUpload.length
     });
 
+
     // Enviar datos del formulario
     showStatus("Enviando datos del formulario...", "info");
-    const clientId = await sendFormDataToSheets(data);
+    // const clientId = await sendFormDataToSheets(data); // Se usaba para enviar por el frontend
+    const sheetResult = await sendFormDataToSheets(data);
+    const clientId = sheetResult.clientId;
+    const folderName = sheetResult.folderName;
+
     console.log('✅ Formulario enviado con ID:', clientId);
     
     // Guardar datos para upload de archivos
@@ -1534,7 +1364,7 @@ async function onSubmit(e) {
     // Subir archivos si hay
     if (filesToUpload.length > 0) {
       showStatus("enviando archivos...", "info", );
-      await uploadFilesToBackend(filesToUpload);
+      await uploadFilesToBackend(filesToUpload, folderName);
     }
 
     // Eliminar borrador guardado

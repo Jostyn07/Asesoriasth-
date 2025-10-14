@@ -5,7 +5,7 @@ const redirect_URL = "./formulario.html";
 // configuaración
 const LOGIN_ENDPOINT = "/api/login"
 const FORMULARIO_URL = "./formulario.html"
-const BACKEND_BASE_URL = "http://localhost:3000" //Usar URL de render
+const BACKEND_BASE_URL = "https://asesoriasth-backend-88xb.onrender.com" //Usar URL de render
 
 
 function showMessage(message, type = 'info') {
@@ -24,7 +24,7 @@ function showMessage(message, type = 'info') {
 function handleLoginResponse (token, userName) {
     localStorage.setItem('authProvider', 'local');
     localStorage.setItem('sessionActive', 'true');
-    localStorage.setItem('local_jwt_token', troken);
+    localStorage.setItem('local_jwt_token', token);
     localStorage.setItem('userInfo', JSON.stringify({ name: userName, provider:'local'}));
 
     showMessage(`¡Bienvenido, ${userName}!`, "success");
@@ -141,9 +141,9 @@ function checkExistingAuth() {
 // Funcion principal de envío login
 async function onSumbitLogin(e) {
     e.preventDefault();
-    const email = document.getElementById('emailInput')?.value;
-    const password = document.getElementById('passwordInput')?.value;
-    const sumbitBtn = document.getElementById('btn-login');
+    const email = document.getElementById('email')?.value;
+    const password = document.getElementById('password')?.value;
+    const sumbitBtn = document.getElementById('.btn-login');
     if (!email || !password) {
         showMessage('Por favor, ingresar email y contraseña.', 'error');
         return;
@@ -163,7 +163,7 @@ async function onSumbitLogin(e) {
             body: JSON.stringify({ email, password}) // Envio de credenciales
         });
 
-        const result = await Response.json();
+        const result = await response.json();
         if (!response.ok) {
             // Error 401 que son credenciales invalidas
             throw new Error(result.error || 'Credenciales no validas.')
