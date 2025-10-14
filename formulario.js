@@ -1351,7 +1351,6 @@ async function onSubmit(e) {
     showStatus("Enviando datos del formulario...", "info");
     // const clientId = await sendFormDataToSheets(data); // Se usaba para enviar por el frontend
     const sheetResult = await sendFormDataToSheets(data);
-    const clientId = sheetResult.clientId;
     const folderName = sheetResult.folderName;
 
     console.log('✅ Formulario enviado con ID:', clientId);
