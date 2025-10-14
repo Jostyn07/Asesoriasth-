@@ -491,7 +491,7 @@ function showStatus(msg, type = "info") {
 
   box.timer = setTimeout(() => {
     box.style.display = "none"; 
-  }, timeoutDuration);
+  }, timeout);
 }
 
 // Barra de carga para uploads
