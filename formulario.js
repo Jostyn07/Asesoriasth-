@@ -1221,7 +1221,7 @@ async function sendFormDataToSheets(data) {
   showStatus("Enviando datos al servidor...", "info");
 
   try {
-    const response = await fetch(`${BACKEND_URL}/submit-form-data`, {
+    const response = await fetch(`${BACKEND_URL}/api/submit-form-data`, {
       method: "POST",
       headers: {
         "Content-Type":  "application/json",
@@ -1257,7 +1257,7 @@ async function uploadFilesToBackend(files, folderNameFromSheets) {
 
     if (!folderName) throw new Error("No se puedo generar el nombre de la carpeta");
 
-    const res = await fetch(`${BACKEND_URL}/create-folder`, {
+    const res = await fetch(`${BACKEND_URL}/api/create-folder`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ folderName })
@@ -1285,7 +1285,7 @@ async function uploadFilesToBackend(files, folderNameFromSheets) {
   formData.append("telefono", window.lastFormData?.telefono || "");
 
   try {
-    const response = await fetch(`${BACKEND_URL}/upload-files`, {
+    const response = await fetch(`${BACKEND_URL}/api/upload-files`, {
       method: "POST",
       body: formData
     });
