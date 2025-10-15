@@ -667,7 +667,7 @@ input[type="radio"] {
 
 .close-status-btn:hover {
     opacity: 1;
-    color: ##ffcccc;
+    color: #ffcccc;
 }
 @keyframes slideIn {
     from {

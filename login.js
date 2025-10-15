@@ -143,7 +143,7 @@ async function onSumbitLogin(e) {
     e.preventDefault();
     const email = document.getElementById('email')?.value;
     const password = document.getElementById('password')?.value;
-    const sumbitBtn = document.getElementById('btn-login');
+    const sumbitBtn = document.querySelector('.btn-login');
     if (!email || !password) {
         showMessage('Por favor, ingresar email y contraseña.', 'error');
         return;
