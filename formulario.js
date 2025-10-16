@@ -1327,12 +1327,28 @@ async function uploadFilesToBackend(files, folderNameFromSheets) {
 async function onSubmit(e) {
   e.preventDefault();
   e.stopPropagation();
+
+  const submitBtn = document.getElementById('submitBtn');
+
+  if (submitBtn) {
+    if (submitBtn.disabled) {
+      return;
+    }
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Enviando...';
+    submitBtn.classList.add('btn-loading');
+  }
   
   showLoaderBar(true);
   
   try {
     // Validar datos del cliente
     if (!validateClientData()) {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Enviar datos';
+        submitBtn.classList.remove('btn-loading');
+      }
       showLoaderBar(false);
       return;
     }
@@ -1399,6 +1415,13 @@ async function onSubmit(e) {
   } catch (error) {
     console.error("❌ Error completo en onSubmit:", error);
     showStatus(`Error procesando formulario: ${error.message}`, "error");
+
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Enviar datos';
+      submitBtn.classList.remove('brn-loading');
+    }
+
   } finally {
     showLoaderBar(false);
   }
