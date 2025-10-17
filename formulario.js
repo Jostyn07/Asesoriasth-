@@ -1609,15 +1609,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     
     console.log('✅ Usuario autenticado correctamente');
     
-    // Configurar verificación periódica (cada 10 minutos en lugar de cada minuto)
-    setInterval(async () => {
-      try {
-        await ensureAuthenticated({interactive: false});
-      } catch (error) {
-        console.error('❌ Error en verificación periódica:', error);
-      }
-    }, 10 * 60 * 1000); // 10 minutos
-    
+    // Configurar verificación periódica (cada 10 minutos en lugar de cada minuto)    
   } catch (error) {
     console.error('❌ Error crítico en inicialización:', error);
     promptAndRedirectToLogin("Error iniciando aplicación. Por favor, inicia sesión nuevamente.");
@@ -1798,171 +1790,12 @@ async function saveDraft() {
     localStorage.setItem('formDraft', JSON.stringify(data));
     console.log('✅ Borrador guardado en localStorage');
     
-    try {
-      // Enviar a Google Sheets
-      await sendDraftToSheets(data);
-      showStatus('✅ Borrador guardado exitosamente en Sheets', 'success');
-      console.log('✅ Borrador guardado completamente');
-    } catch (sheetsError) {
-      console.error('❌ Error específico de Sheets:', sheetsError);
-      
-      if (sheetsError.message.includes('hoja "Borrador" no existe')) {
-        showStatus('⚠️ Borrador guardado localmente. Necesitas crear la hoja "Borrador" en Google Sheets.', 'warning');
-      } else {
-        showStatus(`⚠️ Borrador guardado localmente. Error en Sheets: ${sheetsError.message}`, 'warning');
-      }
-    }
-    
   } catch (error) {
     console.error('❌ Error guardando borrador:', error);
     showStatus('❌ Error crítico: No se pudo guardar el borrador', 'error');
   }
 }
 
-//Agregar función para enviar borrador a Google Sheets
-async function sendDraftToSheets(data) {
-  console.log('📤 Enviando borrador a Google Sheets...');
-
-  // Verificar autenticación
-  const authenticated = await ensureAuthenticated({ interactive: false });
-  if (!authenticated) {
-    throw new Error("No estás autenticado para guardar en Sheets");
-  }
-
-  try {
-    // Preparar datos para la hoja "Borrador"
-    const completedSections = getCompletedSections(data);
-    const completionPercentage = calculateCompletionPercentage(data);
-    
-    console.log('📊 Estadísticas del borrador:', {
-      sections: completedSections,
-      completion: completionPercentage,
-      dependents: data.dependents?.length || 0,
-      cignaPlans: data.cignaPlans?.length || 0
-    });
-    
-    const borradorData = [
-      data.draftId || `DRAFT-${Date.now()}`,
-      new Date(data.draftTimestamp).toLocaleString('es-ES'),
-      data.nombre || '',
-      data.apellidos || '',
-      data.telefono || '',
-      data.correo || '',
-      data.operador || '',
-      data.compania || '',
-      data.plan || '',
-      data.estadoMigratorio || '',
-      data.cantidadDependientes || '0',
-      (data.dependents?.length || 0).toString(),
-      (data.cignaPlans?.length || 0).toString(),
-      data.metodoPago || '',
-      completionPercentage,
-      completedSections.join(', '),
-      data.observaciones || '',
-      JSON.stringify(data, null, 0), // Datos completos como JSON compacto
-      'Activo'
-    ];
-
-    // USAR RANGO ESPECÍFICO EN LUGAR DE append
-    const borradorUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Borrador!A:S?valueInputOption=USER_ENTERED`;
-    
-    console.log('🌐 URL de envío:', borradorUrl);
-    console.log('📝 Datos a enviar:', borradorData.slice(0, 16)); // No mostrar JSON completo en log
-    
-    // PRIMERO: Verificar si la hoja "Borrador" existe
-    try {
-      const testResponse = await authenticatedFetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Borrador!A1`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!testResponse.ok) {
-        throw new Error(`La hoja "Borrador" no existe. Código: ${testResponse.status}`);
-      }
-    } catch (testError) {
-      console.error('❌ Error verificando hoja Borrador:', testError);
-      throw new Error(`La hoja "Borrador" no existe en el Google Sheet. Por favor, créala primero con los encabezados correctos.`);
-    }
-
-    // SEGUNDO: Obtener la siguiente fila vacía
-    const rangeResponse = await authenticatedFetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Borrador!A:A`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    let nextRow = 2; // Empezar desde la fila 2 (después de encabezados)
-    if (rangeResponse.ok) {
-      const rangeData = await rangeResponse.json();
-      if (rangeData.values && rangeData.values.length > 0) {
-        nextRow = rangeData.values.length + 1;
-      }
-    }
-
-    // TERCERO: Insertar en la fila específica
-    const insertUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Borrador!A${nextRow}:S${nextRow}?valueInputOption=USER_ENTERED`;
-    
-    const response = await authenticatedFetch(insertUrl, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        values: [borradorData]
-      }),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('❌ Error en respuesta de borrador:', {
-        status: response.status,
-        statusText: response.statusText,
-        error: errorText,
-        url: insertUrl
-      });
-      
-      // Mensaje más específico según el error
-      if (response.status === 400) {
-        throw new Error(`Error 400: Verifica que la hoja "Borrador" exista y tenga el formato correcto. Detalles: ${errorText}`);
-      } else if (response.status === 403) {
-        throw new Error(`Error 403: Sin permisos para escribir en la hoja "Borrador". Verifica los permisos.`);
-      } else {
-        throw new Error(`Error ${response.status}: ${errorText}`);
-      }
-    }
-
-    const result = await response.json();
-    console.log('✅ Respuesta exitosa de Sheets:', result);
-    
-    return result;
-
-  } catch (error) {
-    console.error('❌ Error detallado en sendDraftToSheets:', error);
-    
-    // Si es error de autenticación, intentar refrescar
-    if (error.message.includes('401') || error.message.includes('unauthorized')) {
-      console.log('🔄 Error de autenticación, intentando refrescar token...');
-      try {
-        await refreshAccessToken();
-        // Reintentar una vez
-        return await sendDraftToSheets(data);
-      } catch (refreshError) {
-        console.error('❌ Error refrescando token:', refreshError);
-      }
-    }
-    
-    throw new Error(`Error guardando borrador en Sheets: ${error.message}`);
-  }
-}
 //Funcion para calcular porcentaje de completado:
 function calculateCompletionPercentage(data) {
   let completed = 0;
