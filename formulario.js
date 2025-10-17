@@ -688,7 +688,7 @@ function addDependentField(existingData = null) {
     <div class="dependent-form-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;">
       <div class="form-group-formal">
         <label class="form-label-formal">Fecha de Nacimiento (mm/dd/aaaa) <span class="required-asterisk">*</span></label>
-        <input type="text" class="form-input-formal dependent-fecha form-control" name="FechaNacimientoDependiente" value="${d.fechaNacimiento}" placeholder="MM/DD/AAAA" maxlength="10" required>
+        <input type="text" class="form-input-formal dependent-fecha form-control" name="FechaNacimientoDependiente" value="${d.fechaNacimiento}" placeholder="mm/dd/aaaa" maxlength="10" required>
       </div>
       <div class="form-group-formal">
         <label class="form-label-formal">Parentesco <span class="required-asterisk">*</span></label>
