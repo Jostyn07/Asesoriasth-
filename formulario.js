@@ -1749,7 +1749,22 @@ function closeDependentsModal() {
   const dataForm = document.getElementById('dataForm');
   if (dataForm) {
     dataForm.addEventListener('submit', onSubmit);
-    console.log('✅ Event listener del formulario configurado');
+    dataForm.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        if (e.target.tagName.toLoweCase() === 'textarea') {
+          return;
+        }
+
+        const formElements = Array.from(dataForm.elements);
+        const currentElementIndex = formElements.indexOf(e.target);
+        const nextElement = formElements[currentElementIndex + 1];
+
+        if (nextElement && nextElement.tagname.toLoweCase() !== 'button') {
+          nextElement.focus();
+        }
+      }
+    })
   } else {
     console.error('❌ No se encontró el formulario con id "dataForm"');
   }
