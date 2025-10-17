@@ -1789,6 +1789,7 @@ async function saveDraft() {
     // Guardar en localStorage primero (respaldo)
     localStorage.setItem('formDraft', JSON.stringify(data));
     console.log('✅ Borrador guardado en localStorage');
+    showStatus('Guardado localmente', 'success')
     
   } catch (error) {
     console.error('❌ Error guardando borrador:', error);
