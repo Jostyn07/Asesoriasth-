@@ -1460,13 +1460,6 @@ async function markDraftsAsSentInSheets(clientId) {
   console.log('📝 Marcando borradores como enviados en Sheets...');
   
   try {
-    // Verificar autenticación
-    const authenticated = await ensureAuthenticated({ interactive: false });
-    if (!authenticated) {
-      console.log('⚠️ No autenticado - no se pueden marcar borradores en Sheets');
-      return;
-    }
-
     // Obtener todos los borradores actuales
     const draftsUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Borrador!A:S`;
     
