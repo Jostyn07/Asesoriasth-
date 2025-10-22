@@ -378,11 +378,11 @@ function validateObamacareFields() {
   if (document.getElementById('estadoMigratorio').value === 'Ciudadano') {
     requiredFields['#SSN'] = 'El campo SSN es obligatorio';
   }
-  requiredFields['#email'] = 'El campo email es obligatorio';
+  requiredFields['#correo'] = 'El campo email es obligatorio';
   requiredFields['#telefono'] = 'El campo teléfono es obligatorio';
   requiredFields['#ingresos'] = 'El campo ingresos es obligatorio';
-  requiredFields['nacionalidad'] = 'El campo nacionalidad es obligatorio';
-  requiredFields['ocupacion'] = 'El campo ocupación es obligatorio';
+  requiredFields['#nacionalidad'] = 'El campo nacionalidad es obligatorio';
+  requiredFields['#ocupación'] = 'El campo ocupación es obligatorio';
   return validateFields(requiredFields);
 }
 
@@ -563,11 +563,6 @@ function openDependentsModal() {
 
   modal.style.display = "block";
   updateDependentsCount();
-}
-
-function closeDependentsModal() {
-  const modal = $("#dependentsModal");
-  if (modal) modal.style.display = "none";
 }
 
 function updateDependentsCount() {
@@ -1411,6 +1406,12 @@ async function onSubmit(e) {
     // Resetear formulario
     resetFormState();
     showStatus("✅ Formulario y archivos procesados exitosamente!", "success");
+
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Enviar datos';
+      submitBtn.classList.remove('btn-loading');
+    }
 
   } catch (error) {
     console.error("❌ Error completo en onSubmit:", error);
