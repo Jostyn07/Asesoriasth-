@@ -578,6 +578,18 @@ function saveDependentsData() {
   const items = container.querySelectorAll(".dependent-item-formal");
   const data = [];
   let ok = true;
+  
+  function closeDependentsModal() {
+  const modal = $("#dependentsModal");
+  const cantidad = $("#cantidadDependientes");
+  if (modal) modal.style.display = "none";
+  if (cantidad && parseInt(cantidad.value, 10) === 0) {
+    const container = document.getElementById("modalDependentsContainer");
+    if (container) container.innerHTML = "";
+    window.currentDependentsData = [];
+    localStorage.removeItem("dependentsDraft");
+  }
+}
 
   items.forEach((card, i) => {
     const nombre = card.querySelector(".dependent-nombre")?.value.trim();
