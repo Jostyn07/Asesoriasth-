@@ -378,11 +378,11 @@ function validateObamacareFields() {
   if (document.getElementById('estadoMigratorio').value === 'Ciudadano') {
     requiredFields['#SSN'] = 'El campo SSN es obligatorio';
   }
-  requiredFields['#correo'] = 'El campo email es obligatorio';
+  requiredFields['#email'] = 'El campo email es obligatorio';
   requiredFields['#telefono'] = 'El campo teléfono es obligatorio';
   requiredFields['#ingresos'] = 'El campo ingresos es obligatorio';
-  requiredFields['#nacionalidad'] = 'El campo nacionalidad es obligatorio';
-  requiredFields['#ocupación'] = 'El campo ocupación es obligatorio';
+  requiredFields['nacionalidad'] = 'El campo nacionalidad es obligatorio';
+  requiredFields['ocupacion'] = 'El campo ocupación es obligatorio';
   return validateFields(requiredFields);
 }
 
@@ -451,10 +451,10 @@ window.addEventListener("storage", (e) => {
 });
 
 // =============================== Utilidades ===============================
-const $ = (sel, root = document) => root.querySelector(sel);
-const $all = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+export const $ = (sel, root = document) => root.querySelector(sel);
+export const $all = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
-function showStatus(msg, type = "info") {
+export function showStatus(msg, type = "info") {
   const box = $("#statusMessage");
   if (!box) {
     console.error("Elemento #statusMessage no encontrado");
@@ -565,6 +565,11 @@ function openDependentsModal() {
   updateDependentsCount();
 }
 
+function closeDependentsModal() {
+  const modal = $("#dependentsModal");
+  if (modal) modal.style.display = "none";
+}
+
 function updateDependentsCount() {
   const cant = $("#cantidadDependientes");
   const container = $("#modalDependentsContainer");
@@ -578,18 +583,6 @@ function saveDependentsData() {
   const items = container.querySelectorAll(".dependent-item-formal");
   const data = [];
   let ok = true;
-  
-  function closeDependentsModal() {
-  const modal = $("#dependentsModal");
-  const cantidad = $("#cantidadDependientes");
-  if (modal) modal.style.display = "none";
-  if (cantidad && parseInt(cantidad.value, 10) === 0) {
-    const container = document.getElementById("modalDependentsContainer");
-    if (container) container.innerHTML = "";
-    window.currentDependentsData = [];
-    localStorage.removeItem("dependentsDraft");
-  }
-}
 
   items.forEach((card, i) => {
     const nombre = card.querySelector(".dependent-nombre")?.value.trim();
@@ -1174,6 +1167,7 @@ function collectData() {
     sexo: $("#sexo")?.value || "",
     correo: $("#correo")?.value?.trim() || "",
     telefono: $("#telefono")?.value?.trim() || "",
+    telefono2: $("#telefono2")?.value.trim() || "",
     fechaNacimiento: $("#fechaNacimiento")?.value || "",
     estadoMigratorio: $("#estadoMigratorio")?.value || "",
     ssn: $("#SSN")?.value || "",
@@ -1419,12 +1413,6 @@ async function onSubmit(e) {
     resetFormState();
     showStatus("✅ Formulario y archivos procesados exitosamente!", "success");
 
-    if (submitBtn) {
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Enviar datos';
-      submitBtn.classList.remove('btn-loading');
-    }
-
   } catch (error) {
     console.error("❌ Error completo en onSubmit:", error);
     showStatus(`Error procesando formulario: ${error.message}`, "error");
@@ -1432,7 +1420,7 @@ async function onSubmit(e) {
     if (submitBtn) {
       submitBtn.disabled = false;
       submitBtn.textContent = 'Enviar datos';
-      submitBtn.classList.remove('btn-loading');
+      submitBtn.classList.remove('brn-loading');
     }
 
   } finally {
@@ -1821,7 +1809,7 @@ function calculateCompletionPercentage(data) {
   ];
 
   const optionalFields = [
-    'sexo', 'ssn', 'ingresos', 'ocupación', 'nacionalidad',
+    'sexo', 'telefono2', 'ssn', 'ingresos', 'ocupación', 'nacionalidad',
     'aplica', 'direccion', 'casaApartamento', 'condado', 'ciudad',
     'estado', 'codigoPostal', 'creditoFiscal', 'prima', 'link', 
     'tipoVenta', 'claveSeguridad', 'observaciones'
@@ -1985,6 +1973,7 @@ function fillFormWithData(data) {
     'sexo': 'sexo',
     'correo': 'correo',
     'telefono': 'telefono',
+    'telefono2': 'telefono2',
     'fechaNacimiento': 'fechaNacimiento',
     'estadoMigratorio': 'estadoMigratorio',
     'SSN': 'ssn',
