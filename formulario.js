@@ -1419,6 +1419,12 @@ async function onSubmit(e) {
     resetFormState();
     showStatus("✅ Formulario y archivos procesados exitosamente!", "success");
 
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Enviar datos';
+      submitBtn.classList.remove('btn-loading');
+    }
+
   } catch (error) {
     console.error("❌ Error completo en onSubmit:", error);
     showStatus(`Error procesando formulario: ${error.message}`, "error");
