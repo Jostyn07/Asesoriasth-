@@ -736,6 +736,12 @@ function addDependentField(existingData = null) {
     </div>
   `;
   container.appendChild(card);
+  if (d.estadoMigratorio) {
+    const estadoEl = card.querySelector('.dependent-estado-migratorio');
+    if (estadoEl) {
+      estadoEl.value = d.estadoMigratorio;
+    }
+  }
   setupDependentValidation(card);
   updateDependentNumbers();
   updateDependentsCount();
