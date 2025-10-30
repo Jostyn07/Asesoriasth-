@@ -382,7 +382,7 @@ function validateObamacareFields() {
   requiredFields['#telefono'] = 'El campo teléfono es obligatorio';
   requiredFields['#ingresos'] = 'El campo ingresos es obligatorio';
   requiredFields['#nacionalidad'] = 'El campo nacionalidad es obligatorio';
-  requiredFields['#ocupacion'] = 'El campo ocupación es obligatorio';
+  requiredFields['#ocupación'] = 'El campo ocupación es obligatorio';
   return validateFields(requiredFields);
 }
 
