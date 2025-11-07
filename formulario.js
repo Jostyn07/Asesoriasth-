@@ -705,6 +705,8 @@ function addDependentField(existingData = null) {
           <option value="Abuela" ${d.parentesco === "Abuela" ? "selected" : ""}>Abuela</option>
           <option value="Sobrino" ${d.parentesco === "Sobrino" ? "selected" : ""}>Sobrino</option>
           <option value="Sobrina" ${d.parentesco === "Sobrina" ? "selected" : ""}>Sobrina</option>
+          <option value="Suegro" ${d.parentesco === "Suegro" ? "selected" : ""}>Suegro</option>
+          <option value="Suegra" ${d.parentesco === "Suegra" ? "selected" : ""}>Suegra</option>
         </select>
       </div>
       <div class="grid-item">
