@@ -1,1369 +1,459 @@
-:root {
-    /* Colores principales */
-    --primary-color: #007bff;
-    --primary-hover: #0056b3;
-    --secondary-color: #28a745;
-    --secondary-hover: #218838;
-    --danger-color: #dc3545;
-    --warning-color: #ff9800;
-    --success-color: #28a745;
-    --info-color: #17a2b8;
-
-    /* Fondos mejorados */
-    --bg-dark: #1a2a3a;
-    --bg-darker: #0d3b66;
-    --bg-card: #213c54;
-    --bg-card-header: #0d3b66;
-    --bg-input: rgba(255, 255, 255, 0.08);
-    --bg-light: #2a4c6a;
-    --bg-overlay: rgba(0, 0, 0, 0.7);
-    
-    /* Textos */
-    --text-light: #f8f9fa;
-    --text-muted: #b0c4de;
-    --text-placeholder: rgba(255, 255, 255, 0.4);
-    
-    /* Bordes */
-    --border-color: rgba(255, 255, 255, 0.2);
-    --border-active: #007bff;
-    
-    /* Sombras mejoradas */
-    --shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-    --shadow-hover: 0 10px 40px rgba(0, 0, 0, 0.4);
-    --shadow-modal: 0 20px 60px rgba(0, 0, 0, 0.5);
-    --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.25);
-    
-    /* Efectos */
-    --border-radius: 12px;
-    --border-radius-small: 8px;
-    --border-radius-large: 16px;
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-fast: all 0.2s ease;
-    --backdrop-blur: blur(10px);
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 100%);
-    min-height: 100vh;
-    color: var(--text-light);
-    padding: 20px;
-    line-height: 1.6;
-}
-
-/* ===== CONTENEDOR PRINCIPAL ===== */
-.container {
-    max-width: 1200px;
-    width: 100%;
-    padding: 0 15px;
-    margin: 0 auto;
-}
-
-/* ===== HEADER MEJORADO ===== */
-.main-header {
-    width: 100%;
-    padding: 30px 0;
-    text-align: center;
-    margin-bottom: 40px;
-    position: relative;
-}
-
-.main-header::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80px;
-    height: 2px;
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-}
-
-.main-header .logo-img {
-    max-width: 280px;
-    height: auto;
-    filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.4));
-    transition: var(--transition);
-}
-
-.main-header .logo-img:hover {
-    transform: scale(1.05) translateY(-5px);
-    filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.5));
-}
-
-/* ===== TÍTULO PRINCIPAL MEJORADO ===== */
-h2.main-title {
-    font-family: 'Inter', sans-serif;
-    font-weight: 800;
-    font-size: clamp(2rem, 5vw, 3.2rem);
-    color: var(--text-light);
-    text-align: center;
-    margin-bottom: 40px;
-    text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.6);
-    position: relative;
-    letter-spacing: -0.02em;
-}
-
-h2.main-title::after {
-    content: '';
-    position: absolute;
-    bottom: -15px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 120px;
-    height: 4px;
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-    border-radius: 2px;
-}
-
-/* ===== MENSAJE DE BIENVENIDA MEJORADO ===== */
-div h2 {
-    color: var(--text-light);
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 1.8rem;
-    font-weight: 600;
-}
-
-#userName {
-    color: var(--primary-color);
-    font-weight: 700;
-    text-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
-}
-
-/* ===== CONTENEDOR DEL FORMULARIO MEJORADO ===== */
-.form-container {
-    background: var(--bg-card);
-    padding: 40px;
-    border-radius: var(--border-radius-large);
-    box-shadow: var(--shadow-modal);
-    color: var(--text-light);
-    width: 100%;
-    position: relative;
-    backdrop-filter: var(--backdrop-blur);
-    border: 1px solid var(--border-color);
-}
-
-/* ===== SISTEMA DE PESTAÑAS MEJORADO ===== */
-.tabs-nav {
-    display: flex;
-    justify-content: flex-start;
-    margin-bottom: 30px;
-    border-bottom: 2px solid var(--bg-darker);
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: var(--border-radius) var(--border-radius) 0 0;
-    overflow: hidden;
-    position: relative;
-}
-
-.tab-button {
-    background: var(--bg-darker);
-    border: none;
-    color: var(--text-muted);
-    padding: 18px 30px;
-    cursor: pointer;
-    transition: var(--transition);
-    font-weight: 600;
-    border-bottom: 3px solid transparent;
-    font-size: 1rem;
-    position: relative;
-    overflow: hidden;
-}
-
-.tab-button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    transition: left 0.6s;
-}
-
-.tab-button:hover::before {
-    left: 100%;
-}
-
-.tab-button:hover {
-    background: var(--bg-light);
-    color: var(--text-light);
-    transform: translateY(-2px);
-}
-
-.tab-button.active {
-    background: linear-gradient(135deg, var(--primary-color), var(--info-color));
-    color: white;
-    border-bottom-color: var(--secondary-color);
-    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
-}
-
-/* ===== CONTENIDO DE PESTAÑAS MEJORADO ===== */
-.tab-content {
-    display: none;
-}
-
-.tab-content.active {
-    display: block;
-    animation: slideInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes slideInUp {
-    from { 
-        opacity: 0; 
-        transform: translateY(30px);
-    }
-    to { 
-        opacity: 1; 
-        transform: translateY(0);
-    }
-}
-
-/* ===== TARJETAS MEJORADAS ===== */
-.card {
-    background: var(--bg-card-header);
-    border-radius: var(--border-radius);
-    margin-bottom: 30px;
-    overflow: hidden;
-    border: 1px solid var(--border-color);
-    box-shadow: var(--shadow-card);
-    transition: var(--transition);
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
-}
-
-.card-header {
-    background: linear-gradient(135deg, var(--bg-darker), var(--bg-card));
-    padding: 25px;
-    border-bottom: 1px solid var(--border-color);
-    position: relative;
-}
-
-.card-header::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-}
-
-.card-header h2 {
-    color: var(--text-light);
-    font-size: 1.6rem;
-    font-weight: 700;
-    margin: 0;
-    letter-spacing: -0.01em;
-}
-
-.card-body {
-    padding: 30px;
-}
-
-/* ===== GRID DEL FORMULARIO MEJORADO ===== */
-.form-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 25px;
-    align-items: start;
-}
-
-.grid-item {
-    display: flex;
-    flex-direction: column;
-}
-
-.grid-item.full-width {
-    grid-column: 1 / -1;
-}
-
-/* ===== ETIQUETAS MEJORADAS ===== */
-.form-label {
-    color: var(--text-light);
-    font-weight: 600;
-    margin-bottom: 10px;
-    font-size: 1rem;
-    letter-spacing: 0.01em;
-}
-
-/* ===== INPUTS Y SELECTS MEJORADOS ===== */
-.form-control,
-.form-select {
-    background: var(--bg-input);
-    border: 2px solid var(--border-color);
-    border-radius: var(--border-radius-small);
-    color: var(--text-light);
-    padding: 14px 18px;
-    font-size: 1rem;
-    transition: var(--transition);
-    width: 100%;
-    position: relative;
-    margin-bottom: 10px;
-}
-
-.form-control:focus,
-.form-select:focus {
-    outline: none;
-    border-color: var(--border-active);
-    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.2);
-    background: rgba(255, 255, 255, 0.12);
-    transform: translateY(-2px);
-}
-
-.form-control::placeholder {
-    color: var(--text-placeholder);
-    font-style: italic;
-}
-
-.form-select option {
-    background: var(--bg-darker);
-    color: var(--text-light);
-    padding: 10px;
-}
-
-/* ===== TEXTAREA MEJORADA ===== */
-textarea.form-control {
-    min-height: 120px;
-    resize: vertical;
-    font-family: inherit;
-}
-
-/* ===== BOTONES MEJORADOS ===== */
-.btn {
-    padding: 14px 28px;
-    border: none;
-    border-radius: var(--border-radius-small);
-    font-weight: 700;
-    cursor: pointer;
-    transition: var(--transition);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-size: 1rem;
-    position: relative;
-    overflow: hidden;
-    letter-spacing: 0.02em;
-}
-
-.btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.6s;
-}
-
-.btn:hover::before {
-    left: 100%;
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, var(--primary-color), var(--info-color));
-    color: white;
-    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.35);
-}
-
-.btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(0, 123, 255, 0.5);
-}
-
-.btn-secondary {
-    background: linear-gradient(135deg, #6c757d, #5a6268);
-    color: white;
-    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.3);
-}
-
-.btn-secondary:hover {
-    transform: translateY(-3px);
-    background: linear-gradient(135deg, #5a6268, #495057);
-    box-shadow: 0 10px 30px rgba(108, 117, 125, 0.4);
-}
-
-.btn2 {
-    padding: 14px 28px;
-    border: none;
-    border-radius: var(--border-radius-small);
-    font-weight: 700;
-    cursor: pointer;
-    transition: var(--transition);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-size: 1rem;
-    position: relative;
-    overflow: hidden;
-    letter-spacing: 0.02em;
-}
-
-.btn-siguiente {
-    background: linear-gradient(135deg, var(--primary-color), var(--info-color));
-    color: white;
-    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.35);
-}
-
-.btn-siguiente:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(0, 123, 255, 0.5);
-}
-
-.btn-success {
-    background: linear-gradient(135deg, var(--secondary-color), var(--success-color));
-    color: white;
-    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.35);
-}
-
-.btn-success:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(40, 167, 69, 0.5);
-}
-
-/* ===== MODAL MEJORADO ===== */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 9999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--bg-overlay);
-    backdrop-filter: var(--backdrop-blur);
-    animation: fadeIn 0.3s ease;
-}
-
-.modal.modal-show {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.modal-content {
-    background: var(--bg-card);
-    margin: 5% auto;
-    padding: 0;
-    border: none;
-    width: 90%;
-    max-width: 900px;
-    max-height: 90vh;
-    border-radius: var(--border-radius-large);
-    box-shadow: var(--shadow-modal);
-    position: relative;
-    overflow: hidden;
-    animation: slideInScale 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes slideInScale {
-    from {
-        opacity: 0;
-        transform: scale(0.9) translateY(-30px);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-    }
-}
-
-.modal-header {
-    padding: 25px 30px;
-    border-bottom: 1px solid var(--border-color);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: linear-gradient(135deg, var(--bg-darker), var(--bg-card));
-}
-
-.modal-header h2 {
-    margin: 0;
-    color: var(--text-light);
-    font-size: 1.5rem;
-    font-weight: 700;
-}
-
-.modal-body {
-    padding: 30px;
-    max-height: 60vh;
-    overflow-y: auto;
-}
-
-.modal-footer {
-    padding: 25px 30px;
-    border-top: 1px solid var(--border-color);
-    display: flex;
-    justify-content: flex-end;
-    gap: 15px;
-    background: rgba(255, 255, 255, 0.02);
-}
-
-.close-button {
-    color: var(--text-muted);
-    font-size: 24px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: var(--transition);
-    padding: 5px;
-    border-radius: 50%;
-}
-
-.close-button:hover {
-    color: var(--text-light);
-    background: rgba(255, 255, 255, 0.1);
-    transform: rotate(90deg);
-}
-
-/* ===== TARJETAS DE DEPENDIENTES ===== */
-.dependent-card {
-    background: var(--bg-card);
-    border: 2px solid var(--primary-color);
-    border-radius: var(--border-radius);
-    padding: 25px;
-    margin-bottom: 25px;
-    color: var(--text-light);
-    box-shadow: var(--shadow-card);
-    transition: var(--transition);
-}
-
-.dependent-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 30px rgba(0, 123, 255, 0.2);
-}
-
-/* ===== SECCIÓN DE BOTONES DEPENDIENTES ===== */
-.button-dependent-section {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-    align-items: center;
-}
-
-.modal-actions {
-    margin-top: 20px;
-    text-align: center;
-}
-
-/* ===== CHECKBOXES Y RADIOS MEJORADOS ===== */
-input[type="checkbox"],
-input[type="radio"] {
-    margin-right: 10px;
-    transform: scale(1.3);
-    accent-color: var(--primary-color);
-}
-
-/* ===== CONTENEDORES DE PAGO MEJORADOS ===== */
-#pagoBancoContainer,
-#pagoTarjetaContainer,
-#poBoxAddressContainer {
-    display: none;
-    margin-top: 25px;
-    padding: 25px;
-    background: var(--bg-input);
-    border-radius: var(--border-radius);
-    border: 1px solid var(--border-color);
-    box-shadow: var(--shadow-card);
-}
-
-#pagoBancoContainer h3,
-#pagoTarjetaContainer h3 {
-    color: var(--text-light);
-    margin-bottom: 25px;
-    font-size: 1.4rem;
-    font-weight: 700;
-}
-
-/* ===== ACCIONES DEL FORMULARIO MEJORADAS ===== */
-.form-action {
-    margin-top: 40px;
-    text-align: center;
-    padding-top: 30px;
-    border-top: 2px solid var(--border-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 16px;
-}
-
-#submitBtn {
-    font-size: 1.2rem;
-    padding: 18px 50px;
-    min-width: 250px;
-    font-weight: 800;
-}
-
-/* ===== MENSAJES DE ESTADO MEJORADOS ===== */
-.status-message {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 15px 20px;
-    border-radius: var(--border-radius);
-    font-weight: 600;
-    z-index: 10000;
-    max-width: 400px;
-    box-shadow: var(--shadow-modal);
-    border: 2px solid;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    animation: slideIn 0.3s ease-out;
-    font-size: 1rem;
-    gap: 15px;
-}
-
-.status-message.success {
-    background: rgba(40, 167, 69, 0.95);
-    border-color: var(--success-color);
-    color: white;
-}
-
-.status-message.error {
-    background: rgba(220, 53, 69, 0.95);
-    border-color: var(--danger-color);
-    color: white;
-}
-
-.status-message.info {
-    background: rgba(23, 162, 184, 0.95);
-    border-color: var(--info-color);
-    color: white;
-}
-
-.status-message.warning {
-    background: rgba(255, 193, 7, 0.95);
-    border-color: var(--warning-color);
-    color: #212529;
-}
-
-.close-status-btn {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.2rem;
-    font-weight: bold;
-    cursor: pointer;
-    line-height: 1;
-    padding: 0 0 0 10px;
-    opacity: 0.8;
-    transition: opacity 0.2s ease;
-    flex-shrink: 0;
-}
-
-.close-status-btn:hover {
-    opacity: 1;
-    color: #ffcccc;
-}
-@keyframes slideIn {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-/* ===== CAMPOS DESHABILITADOS MEJORADOS ===== */
-.form-control:disabled,
-.form-select:disabled {
-    background: rgba(255, 255, 255, 0.03);
-    color: var(--text-muted);
-    cursor: not-allowed;
-    opacity: 0.6;
-}
-
-/* ===== UPLOADS MEJORADOS ===== */
-#customUploadContainer .upload-field {
-    margin: 20px 0;
-}
-
-.upload-field-formal {
-    background: var(--bg-input);
-    border: 2px solid var(--border-color);
-    border-radius: var(--border-radius);
-    padding: 25px;
-    box-shadow: var(--shadow-card);
-    transition: var(--transition);
-}
-
-.upload-field-formal:hover {
-    border-color: var(--primary-color);
-    transform: translateY(-2px);
-}
-
-.upload-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    padding-bottom: 15px;
-    border-bottom: 2px dashed var(--border-color);
-    margin-bottom: 20px;
-}
-
-.upload-title {
-    font-weight: 700;
-    font-size: 1.1rem;
-    color: var(--text-light);
-    letter-spacing: 0.02em;
-}
-
-.form-group-upload { 
-    margin-bottom: 20px; 
-}
-
-.form-label-formal {
-    display: inline-block;
-    color: var(--text-light);
-    font-weight: 600;
-    margin-bottom: 8px;
-    font-size: 1rem;
-}
-
-.form-hint {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    margin-top: 8px;
-    font-style: italic;
-}
-
-#customUploadContainer .upload-field .form-input-formal,
-#customUploadContainer .upload-field .form-control,
-#customUploadContainer .upload-field .form-select {
-    width: 100%;
-    display: block;
-    padding: 14px 18px;
-    background: rgba(255,255,255,0.08);
-    border: 2px solid var(--border-color);
-    border-radius: var(--border-radius-small);
-    color: var(--text-light);
-    transition: var(--transition);
-}
-
-.delete-upload-field-btn {
-    padding: 10px 20px;
-    border-radius: var(--border-radius-small);
-    font-size: 0.95rem;
-    background: linear-gradient(135deg, #6c757d, #5a6268);
-    color: #fff;
-    transition: var(--transition);
-    font-weight: 600;
-}
-
-.delete-upload-field-btn:hover {
-    transform: translateY(-2px);
-    background: linear-gradient(135deg, #5a6268, #495057);
-}
-
-.file-info {
-    margin-top: 10px;
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    font-style: italic;
-}
-
-/* ===== CIGNA PLANS MEJORADO ===== */
-.cigna-plan-card {
-    margin-bottom: 25px;
-    border: 2px solid var(--secondary-color);
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    box-shadow: var(--shadow-card);
-    transition: var(--transition);
-}
-
-.cigna-plan-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 30px rgba(40, 167, 69, 0.2);
-}
-
-.cigna-plan-card .card-header {
-    background: linear-gradient(135deg, var(--secondary-color), var(--success-color));
-}
-
-.cigna-plan-card .card-header .btn {
-    padding: 8px 16px;
-    border-radius: var(--border-radius-small);
-    font-size: 0.9rem;
-}
-
-/* ===== UTILIDADES MEJORADAS ===== */
-.required-asterisk {
-    color: var(--danger-color);
-    font-weight: 700;
-    margin-left: 3px;
-}
-
-.form-input-formal.valid {
-    border-color: var(--secondary-color);
-    background: rgba(40,167,69,0.15);
-}
-
-/* ==================== ESTILOS PARA SISTEMA DE BORRADOR ==================== */
-
-/* Contenedor de controles de borrador */
-.draft-controls {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-left: 16px;
-    position: relative;
-}
-
-/* Botón de guardar borrador */
-#saveDraftBtn {
-    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-    border: none;
-    color: white;
-    padding: 10px 16px;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-#saveDraftBtn:hover {
-    background: linear-gradient(135deg, #218838 0%, #1ea085 100%);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
-
-/* Botón del menú desplegable */
-#draftMenuBtn {
-    background: #f8f9fa;
-    border: 1px solid #dee2e6;
-    color: #6c757d;
-    padding: 10px 12px;
-    border-radius: 6px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    min-width: 36px;
-    height: 38px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#draftMenuBtn:hover {
-    background: #e9ecef;
-    border-color: #adb5bd;
-    color: #495057;
-}
-
-/* Menú desplegable */
-.draft-menu {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    z-index: 1000;
-    min-width: 200px;
-    padding: 8px 0;
-    margin-top: 4px;
-    animation: slideDown 0.3s ease;
-}
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Items del menú */
-.draft-menu-item {
-    width: 100%;
-    border: none;
-    background: none;
-    padding: 10px 16px;
-    text-align: left;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    color: var(--text-light);
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.draft-menu-item:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--primary-color);
-}
-
-.draft-menu-item:active {
-    background: #e9ecef;
-}
-
-/* Separador del menú */
-.draft-menu-separator {
-    border: 0;
-    height: 1px;
-    background: var(--border-color);
-    margin: 8px 16px;
-}
-
-/* Notificación de borrador */
-.draft-notification {
-    position: fixed;
-    top: 80px;
-    right: 20px;
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-    color: white;
-    padding: 16px 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    z-index: 1001;
-    max-width: 350px;
-    animation: slideInRight 0.5s ease;
-}
-
-@keyframes slideInRight {
-    from {
-        opacity: 0;
-        transform: translateX(100%);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-.draft-notification h4 {
-    margin: 0 0 8px 0;
-    font-size: 16px;
-    font-weight: 600;
-}
-
-.draft-notification p {
-    margin: 0 0 12px 0;
-    font-size: 14px;
-    opacity: 0.9;
-}
-
-.draft-notification-buttons {
-    display: flex;
-    gap: 8px;
-}
-
-.draft-notification button {
-    padding: 6px 12px;
-    border: none;
-    border-radius: 4px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.draft-notification .btn-primary {
-    background: rgba(255,255,255,0.2);
-    color: white;
-}
-
-.draft-notification .btn-primary:hover {
-    background: rgba(255,255,255,0.3);
-}
-
-.draft-notification .btn-secondary {
-    background: rgba(255,255,255,0.1);
-    color: white;
-}
-
-.draft-notification .btn-secondary:hover {
-    background: rgba(255,255,255,0.2);
-}
-
-/* Modal de información del borrador */
-.draft-info-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1002;
-    animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-.draft-info-content {
-    background: var(--bg-card);
-    border-radius: 8px;
-    padding: 24px;
-    max-width: 500px;
-    width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-    animation: scaleIn 0.3s ease;
-}
-
-@keyframes scaleIn {
-    from {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-.draft-info-content h3 {
-    margin: 0 0 16px 0;
-    color: var(--text-light);
-    font-size: 20px;
-    border-bottom: 2px solid #007bff;
-    padding-bottom: 8px;
-}
-
-.draft-stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 20px;
-}
-
-.draft-stat {
-    background: var(--bg-input);
-    padding: 12px;
-    border-radius: 6px;
-    border-left: 4px solid #007bff;
-}
-
-.draft-stat-label {
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-bottom: 4px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.draft-stat-value {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--text-light);
-}
-
-/* Indicador de auto-guardado */
-.auto-save-indicator {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: rgba(40, 167, 69, 0.95);
-    color: white;
-    padding: 8px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    z-index: 1000;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: all 0.3s ease;
-}
-
-.auto-save-indicator.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.auto-save-spinner {
-    width: 12px;
-    height: 12px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-top: 2px solid white;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* ===== RESPONSIVE MEJORADO ===== */
-@media (max-width: 768px) {
-    .form-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    .tabs-nav {
-        flex-wrap: wrap;
-    }
-    
-    .tab-button {
-        flex: 1;
-        min-width: 130px;
-        padding: 15px 20px;
-    }
-    
-    .button-dependent-section {
-        flex-direction: column;
-    }
-    
-    h2.main-title {
-        font-size: 2.5rem;
-    }
-    
-    .form-container {
-        padding: 25px;
-    }
-    
-    .card-body {
-        padding: 20px;
-    }
-    
-    .modal-content {
-        width: 95%;
-        margin: 2% auto;
-    }
-    
-    .modal-body {
-        padding: 20px;
-        max-height: 70vh;
-    }
-    
-    .upload-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-
-    /* Responsive para borrador */
-    .draft-controls {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 4px;
-        margin-left: 0;
-        margin-top: 8px;
-    }
-    
-    #saveDraftBtn {
-        width: 100%;
-        justify-content: center;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-    
-    #draftMenuBtn {
-        width: 100%;
-    }
-    
-    .draft-menu {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        right: auto;
-        transform: translate(-50%, -50%);
-        width: 90%;
-        max-width: 300px;
-    }
-    
-    .draft-notification {
-        top: 60px;
-        right: 10px;
-        left: 10px;
-        max-width: none;
-    }
-    
-    .draft-info-content {
-        margin: 20px;
-        width: auto;
-    }
-    
-    .draft-stats {
-        grid-template-columns: 1fr;
-        gap: 12px;
-    }
-}
-
-@media (max-width: 480px) {
-    body {
-        padding: 10px;
-    }
-    
-    .form-container {
-        padding: 20px;
-    }
-    
-    .card-body {
-        padding: 15px;
-    }
-    
-    .btn {
-        width: 100%;
-        margin-bottom: 10px;
-    }
-    
-    .modal-header,
-    .modal-body,
-    .modal-footer {
-        padding: 15px;
-    }
-    
-    .delete-upload-field-btn {
-        width: 100%;
-    }
-    
-    h2.main-title {
-        font-size: 2rem;
-    }
-}
-
-/* ===== SCROLLBAR PERSONALIZADA ===== */
-::-webkit-scrollbar {
-    width: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background: var(--bg-darker);
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--primary-color);
-    border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: var(--primary-hover);
-}
-
-/* ===== ANIMACIONES ADICIONALES ===== */
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
-}
-
-.loading {
-    animation: pulse 1.5s infinite;
-}
-
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
-}
-
-.error-shake {
-    animation: shake 0.5s ease-in-out;
-}
-
-#pagoBancoContainer.active,
-#pagoTarjetaContainer.active {
-  display: block;
-}
-
-footer {
-    background: var(--bg-darker);
-    color: var(--text-light);
-    padding: 15px 0;
-    text-align: center;
-}
-
-/* Modal de dependientes */
-#dependentsModal .modal-dialog {
-    width: 90vw;
-    max-width: 100vw;
-    min-width: 350px;
-    margin: 0 auto;
-    border-radius: 16px;
-    padding: 0;
-}
-
-#dependentsModal .modal-body {
-    max-height: 85vh;
-    min-height: 400px;
-    overflow-y: auto;
-    padding: 20px;
-}
-
-.form-control:invalid {
-  border-color: var(--danger-color);
-  background: rgba(220,53,69,0.15);
-}
-
-/* Estilos para validación visual de campos vacíos */
-.form-control.invalid,
-.form-select.invalid {
-  border-color: var(--danger-color) !important;
-  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
-  background: rgba(220, 53, 69, 0.1) !important;
-}
-
-.form-control.valid,
-.form-select.valid {
-  border-color: var(--success-color) !important;
-  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25) !important;
-  background: rgba(40, 167, 69, 0.1) !important;
-}
-
-/* Estado del formulario con borrador */
-.form-has-draft {
-    border-left: 4px solid #ffc107;
-}
-
-.form-has-draft .main-title::after {
-    content: " 📝";
-    color: #ffc107;
-}
-
-/* Animación para campos modificados */
-@keyframes highlight {
-    0% { background-color: rgba(255, 193, 7, 0.2); }
-    100% { background-color: transparent; }
-}
-
-.field-modified {
-    animation: highlight 1s ease-out;
-}
-
-.form-label .fecha-nacimiento{
-    background: var(--bg-input);
-    border: 2px solid var(--border-color);
-    border-radius: var(--border-radius-small);
-    color: var(--text-light);
-    padding: 14px 18px;
-    font-size: 1rem;
-    transition: var(--transition);
-    width: 15px;
-    position: relative;
-    margin-bottom: 10px;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asesorias S&S</title>
+
+    <link rel="icon" type="image/x-icon" href="logo.png">
+    <link rel="stylesheet" href="formulario.css">
+
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+    <div>
+    <h2>¡Bienvenido!, <span id="userName"></span>.</h2>
+</div>
+    <div class="container">
+        <header class="main-header">
+            <img src="Imagenes/Logo.png" alt="Logo de Ase sorias S&S" class="logo-img">
+        </header>
+    </div>
+
+        <h2 class="main-title">Registro de pólizas de clientes</h2>
+        <div class="form-container">
+
+            <form id="dataForm">
+                <nav class="tabs-nav">
+                    <button type="button" class="tab-button active" data-tab="obamacare">Obamacare</button>
+                    <button type="button" class="tab-button" data-tab="cignaComplementario">Cigna complementario</button>
+                    <button type="button" class="tab-button" data-tab="pagos">Pagos</button>
+                    <button type="button" class="tab-button" data-tab="documentos">Documentos y Audio</button>
+                </nav>
+
+                <div class="tab-content active" id="tab-obamacare">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Datos personales</h2>
+                        </div>
+                        <div class="card-body form-grid">
+                            <div class="grid-item">
+                                <label for="fechaRegistro" class="form-label">Fecha de registro:</label>
+                                <input type="date" id="fechaRegistro" name="fechaRegistro" class="form-control" placeholder="Fecha de registro" required>
+                            </div>
+                            <div class="grid-item">
+                                <label for="Nombres" class="form-label">Nombres:</label>
+                                <input type="text" id="Nombre" name="Nombre" class="form-control" placeholder="Nombres del titular" required>
+                            </div>
+                            <div class="grid-item">
+                                <label for="Apellidos" class="form-label">Apellidos:</label>
+                                <input type="text" id="Apellidos" name="Apellidos" class="form-control" placeholder="Apellidos del titular" required>
+                            </div>
+                            <div class="grid-item">
+                                <label for="sexo" class="form-label">Sexo</label>
+                                <select name="sexo" id="sexo" class="form-select" title="Sexo">
+                                    <option value="">Selecciona...</option>
+                                    <option value="Masculino">Masculino</option>
+                                    <option value="Femenino">Femenino</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
+                            </div>
+                            <div class="grid-item">
+                                <label for="correo" class="form-label">Correo electrónico:</label>
+                                <input type="email" id="correo" name="correo" class="form-control" placeholder="Correo electrónico del titular">
+                            </div>
+                            <div class="grid-item">
+                                <label for="telefono" class="form-label">Teléfono:</label>
+                                <input type="tel" id="telefono" name="telefono" class="form-control" placeholder="Teléfono del titular">
+                            </div>
+                            <div class="grid-item">
+                                <label for="telefono2" class="form-label">Teléfono 2:</label>
+                                <input type="tel" id="telefono2" name="telefono2" class="form-control" placeholder="Teléfono 2">
+                            </div>
+                            <div class="grid-item">
+                                <label for="fechaNacimiento" class="form-label">Fecha de nacimiento:</label>
+                                <input type="text" id="fechaNacimiento" name="fechaNacimiento" class="form-control" placeholder="mm/dd/aaaa" required>
+                            </div>
+                            <div class="grid-item">
+                                <label for="estadoMigratorio" class="form-label">Estado migratorio:</label>
+                                <select name="estadoMigratorio" id="estadoMigratorio" class="form-select">
+                                    <option value="">Selecciona...</option>
+                                    <option value="Ciudadano">Ciudadano</option>
+                                    <option value="Residente Permanente">Residente Permanente</option>
+                                    <option value="Permiso de trabajo">Permiso de trabajo</option>
+                                    <option value="Asilo politico">Asilo politico</option>
+                                    <option value="I-94">I-94</option>
+                                    <option value="Otro">Otro</option>
+                                </select>  
+                            </div>
+                            <div class="grid-item">
+                                <label for="SSN" class="form-label">SSN:</label>
+                                <input type="text" id="SSN" name="SSN" class="form-control" placeholder="Número de Seguro Social" maxlength="11" minlength="11">
+                            </div>
+                            <div class="grid-item">
+                                <label for="ingresos" class="form-label">Ingresos:</label>
+                                <input type="text" id="ingresos" name="ingresos" class="form-control" placeholder="Ingresos del titular" min="0" value="0">
+                            </div>
+                            <div class="grid-item">
+                                <label for="ocupación" class="form-label">Ocupación:</label>
+                                <input type="text" id="ocupación" name="ocupación" class="form-control" placeholder="Ocupación del titular">
+                            </div>
+                            <div class="grid-item">
+                                <label for="nacionalidad" class="form-label">Nacionalidad:</label>
+                                <input type="text" id="nacionalidad" name="nacionalidad" class="form-control" placeholder="Nacionalidad del titular" minlength="4" required>
+                            </div>
+                            <div class="grid-item">
+                                <label for="Aplica?" class="form-label"> Aplica?</label>
+                                    <select name="aplica" id="aplica" class="form-select" title="¿Aplica?">
+                                        <option value="">Selecciona...</option>
+                                        <option value="Si">Sí</option>
+                                        <option value="No">No</option>
+                                    </select>
+                            </div>
+                            <div class="grid-item full-width">
+                                <label for="cantidadDependientes" class="form-label">Cantidad dependientes:</label>
+                                <input type="number" id="cantidadDependientes" name="cantidadDependientes" class="form-control" placeholder="Cantidad de dependientes" min="0" step="1" value="0">
+                            </div>
+                            <div class="grid-item full-width button-dependent-section">
+                                <button type="button" id="addDependentsBtn" class="btn btn-primary">Agregar dependiente</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Contenedor inline para dependientes -->
+                    <div class="card" id="dependentsInlineContainer" style="display: none;">
+                        <div class="card-header">
+                            <h2>Dependientes</h2>
+                        </div>
+                        <div class="card-body">
+                            <div id="dependentsContainer"></div>
+                            <div class="grid-item full-width button-dependent-section" style="margin-top: 20px;">
+                                <button type="button" id="addAnotherDependent" class="btn btn-primary">Añadir otro dependiente</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Dirección</h2>
+                        </div>
+                        <div class="card-body form-grid">
+                            <div class="grid-item">
+                                <label for="direccion">Dirección:</label>
+                                <input type="text" id="direccion" name="direccion" class="form-control" placeholder="Dirección del titular">
+                            </div>
+                            <div class="grid-item">
+                                <label for="casaApartamento">Casa/Apartamento:</label>
+                                <input type="text" id="casaApartamento" name="casaApartamento" class="form-control" placeholder="Casa/Apartamento del titular">
+                            </div>
+                            <div class="grid-item">
+                                <label for="condado">Condado:</label>
+                                <input type="text" id="condado" name="condado" class="form-control" placeholder="Condado del titular">
+                            </div>
+                            <div class="grid-item">
+                                <label for="Ciudad">Ciudad:</label>
+                                <input type="text" id="Ciudad" name="Ciudad" class="form-control" placeholder="Ciudad del titular">
+                            </div>
+                            <div class="grid-item">
+                                <label for="estado">Estado:</label>
+                                <select name="estado" id="estado" class="form-select">
+                                    <option value="">Selecciona...</option>
+                                    <option value="AL">Alabama (AL)</option>
+                                    <option value="AZ">Arizona (AZ)</option>
+                                    <option value="FL">Florida (FL)</option>
+                                    <option value="GA">Georgia (GA)</option>
+                                    <option value="IL">Illinois (IL)</option>
+                                    <option value="IN">Indiana (IN)</option>
+                                    <option value="KS">Kansas (KS)</option>
+                                    <option value="LA">Louisiana (LA)</option>
+                                    <option value="MI">Michigan (MI)</option>
+                                    <option value="MO">Missouri (MO)</option>
+                                    <option value="MS">Mississippi (MS)</option>
+                                    <option value="MS">Maryland (MD)</option>
+                                    <option value="NC">North Carolina (NC)</option>
+                                    <option value="NJ">New Jersey (NJ)</option>
+                                    <option value="OH">Ohio (OH)</option>
+                                    <option value="OK">Oklahoma (OK)</option>
+                                    <option value="OK">Pensilvania (PA)</option>
+                                    <option value="SC">Carolina del Sur (SC)</option>
+                                    <option value="TN">Tennessee (TN)</option>
+                                    <option value="TX">Texas (TX)</option>
+                                    <option value="UT">Utah (UT)</option>
+                                    <option value="VA">Virginia (VA)</option>
+                                </select>
+                            </div>
+                            <div class="grid-item">
+                                <label for="codigoPostal">Código Postal:</label>
+                                <input type="text" id="codigoPostal" name="codigoPostal" class="form-control" placeholder="Código Postal del titular">
+                            </div>
+                            <div class="grid-item">
+                                <label class="form-label">
+                                <input type="checkbox" id="poBoxcheck" class="form-control">¿Tiene PO Box?
+                                </label>
+                            </div>
+                            <div class="grid-item">
+                                <input type="text" id="poBox" name="poBox" class="form-control" placeholder="PO Box" disabled>
+                            </div>
+                        </div>
+                     </div>
+
+                     <div class="card">
+                        <div class="card-header">
+                            <h2>Información de la Póliza</h2>
+                        </div>
+                        <div class="card-body form-grid">
+                            <div class="grid-item">
+                                <label for="compania" class="form-label">Compañía Aseguradora:</label>
+                                <select id="compania" name="compania" class="form-select">
+                                    <option value="">Selecciona...</option>
+                                    <option value="Aetna">Aetna</option>
+                                    <option value="Ambetter">Ambetter</option>
+                                    <option value="Ameri HealthCaritas Next">Ameri HealthCaritas Next</option>
+                                    <option value="Athem">Athem</option>
+                                    <option value="Baylor">Baylor</option>
+                                    <option value="Blue Cross and Blue Shield">Blue Cross and Blue Shield</option>
+                                    <option value="CareSource">CareSource</option>
+                                    <option value="Christus Health Plan">Christus Health Plan</option>
+                                    <option value="Cigna">Cigna</option>
+                                    <option value="Community Health Choice">Community Health Choice</option>
+                                    <option value="Florida Blue">Florida Blue</option>
+                                    <option value="Health Firts">Health Firts</option>
+                                    <option value="Imperial Insurance">Imperial Insurance</option>
+                                    <option value="Molina">Molina</option>
+                                    <option value="Oscar">Oscar</option>
+                                    <option value="United HealthCare">United HealthCare</option>
+                                    <option value="WellPoint">WellPoint</option>
+                                </select>
+                            </div>
+                            <div class="grid-item">
+                                <label for="plan" class="form-label">Plan:</label>
+                                <input type="text" id="plan" name="plan" class="form-control" placeholder="Plan de la póliza">
+                            </div>
+                            <div class="grid-item">
+                                <label for="prima" class="form-label">Prima:</label>
+                                <input type="text" id="prima" name="prima" class="form-control" placeholder="Prima de la póliza">
+                            </div>
+                            <div class="grid-item">
+                                <label for="creditoFiscal" class="form-label">Crédito Fiscal:</label>
+                                <input type="text" id="creditoFiscal" name="creditoFiscal" class="form-control" placeholder="Crédito Fiscal">
+                            </div>
+                            <div class="grid-item">
+                                <label for="link" class="form-label">Enlace de la Póliza:</label>
+                                <input type="text" id="link" name="link" class="form-control" placeholder="Enlace de la Póliza">
+                            </div>
+                            <div class="grid-item">
+                                <label for="tipoVenta" class="form-label">Tipo de venta:</label>
+                                <select name="tipoVenta" id="tipoVenta" class="form-select">
+                                    <option value="">Selecciona...</option>
+                                    <option value="Renovada">Renovada</option>
+                                    <option value="Organica">Organica</option>
+                                    <option value="Nueva con registro">Nueva con registro</option>
+                                    <option value="Recuperada">Recuperada</option>
+                                    <option value="Cambio de vida">Cambio de vida</option>
+                                    <option value="Nueva renovada">Nueva renovada</option>
+                                </select>
+                            </div>
+                            <div class="grid-item">
+                                <label for="operador" class="form-label">Operador:</label>
+                                <select name="operador" id="operador" class="form-select">
+                                    <option value="">Selecciona...</option>
+                                    <option value="Ana Pedroza">Ana Pedroza</option>
+                                    <option value="Annerys Rosendo">Annerys Rosendo</option>
+                                    <option value="Anthonis Vanegas">Anthonis Vanegas</option>
+                                    <option value="Auditoría">Auditoría</option>
+                                    <option value="Brandon Perales">Brandon Perales</option>
+                                    <option value="Carlos Arrieta">Carlos Arrieta</option>
+                                    <option value="Cindy Mendoza">Cindy Mendoza</option>
+                                    <option value="Daniel Orellano">Daniel Orellano</option>
+                                    <option value="Daniel Velandia">Daniel Velandia</option>
+                                    <option value="Daniela Severiche">Daniela Severiche</option>
+                                    <option value="Dayana Peñate">Dayana Peñate</option>
+                                    <option value="Deysi Duque">Deysi Duque</option>
+                                    <option value="Edgar Sanchez">Edgar Sanchez</option>
+                                    <option value="Eduardo Liva">Eduardo Liva</option>
+                                    <option value="Elaine Sanchez">Elaine Sanchez</option>
+                                    <option value="Eliana Mont">Eliana Mont</option>
+                                    <option value="Erica De Oro">Erica De Oro</option>
+                                    <option value="Francheska Peralta">Francheska Peralta</option>
+                                    <option value="Lean Barrios">Lean Barrios</option>
+                                    <option value="Heiner Ospino">Heiner Ospino</option>
+                                    <option value="Isacar Gonzalez">Isacar Gonzalez</option>
+                                    <option value="Javier Rua">Javier Rua</option>
+                                    <option value="Josuad Aragón">Josuad Aragón</option>
+                                    <option value="Juan Ospino">Juan Ospino</option>
+                                    <option value="Kevin Marino">Kevin Marino</option>
+                                    <option value="Laura Restrepo">Laura Restrepo</option>
+                                    <option value="Leidy Jimenez">Leidy Jimenez</option>
+                                    <option value="Libia De la Hoz">Libia De la Hoz</option>
+                                    <option value="Ligimart Agrinzones">Ligimart Agrizones</option>
+                                    <option value="Lisney Monsalvo">Lisney Monsalvo</option>
+                                    <option value="Lizeth Escorcia">Lizeth Escorcia</option>
+                                    <option value="Loraine Ahumada">Loraine Ahumada</option>
+                                    <option value="Luis Rizo">Luis Rizo</option>
+                                    <option value="Luisa Narvaez">Luisa Narvaez</option>
+                                    <option value="Madeleidys Solano">Madeleidys Solano</option>
+                                    <option value="Melissa Diaz">Melissa Diaz</option>
+                                    <option value="Michell Andrea">Michell Andrea</option>
+                                    <option value="Moises Prenk">Moises Prenk</option>
+                                    <option value="Natalia Barcelo">Natalia Barcelo</option>
+                                    <option value="Natasha Bocanegra">Natasha Bocanegra</option>
+                                    <option value="Nicolle Carvajalino">Nicolle Carvajalino</option>}
+                                    <option value="Sebastian Acosta">Sebastian Acosta</option>
+                                    <option value="Steffy Fontanilla">Steffy Fontanilla</option>
+                                    <option value="Moises Prenk">Moises Prenk</option>
+                                    <option value="Vivian Berdugo">Vivian Berdugo</option>
+                                    <option value="Xilenys Celin">Xilenys Celin</option>
+                                    <option value="Yendy Gutierrez">Yendy Gutierrez</option>
+                                    <option value="Yunelys Bermudez">Yunelys Bermudez</option>
+                                    
+                                </select>
+                           </div>
+                           <div class="grid-item">
+                                <label for="claveSeguridad" class="form-label">Clave de Seguridad:</label>
+                                <input type="text" id="claveSeguridad" name="claveSeguridad" class="form-control" placeholder="Clave de Seguridad">
+                           </div>
+                            <div class="grid-item">
+                                <label for="observaciones" class="form-label">Observaciones:</label>
+                                <textarea id="observaciones" name="observaciones" class="form-control" placeholder="Observaciones"></textarea>
+                            </div>
+                        </div>
+                     </div>
+                     <div class="siguiente">
+                        <button type="button" class="btn btn-siguiente" id="btnSiguientePagos">Siguiente</button>
+                     </div>
+                </div>
+
+                <div class="tab-content" id="tab-cignaComplementario">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Información cigna complementario</h2>
+                        </div>
+                        <div class="card-body">
+                            <button type="button" class="btn btn-success" id="addCignaPlanBtn">Agregar plan</button>
+                        </div>
+
+                        <div id="cignaFieldsContainer">
+                            <div id="cignaPlanContainer">
+                                </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content" id="tab-pagos">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Metodo de pago</h2>
+                            <button type="button" id="clearPaymentBtn" class="btn btn-danger" style="position: absolute; right: 10px; top: 10px">Limpiar</button>
+                        </div>
+                        <div class="card-body form-grid">
+                            <div class="grid-item full-width">
+                                <label class="form-select">Selecciona un método de pago</label>
+                                <input type="radio" id="pagoBanco" name="metodoPago" value="banco">
+                                <label for="pagoBanco" class="form-label">Cuenta de banco</label>
+                                <input type="radio" id="pagoTarjeta" name="metodoPago" value="tarjeta">
+                                <label for="pagoTarjeta" class="form-label">Tarjeta</label>
+                            </div>
+                            <div id="pagoBancoContainer" class="grid-item full-width">
+                                <h3>Datos de Cuenta de Banco</h3>
+                                <div class="form-grid">
+                                    <div class="grid-item">
+                                        <label for="numCuenta" class="form-label">Número de Cuenta:</label>
+                                        <input type="text" id="numCuenta" name="numCuenta" class="form-control" placeholder="Número de cuenta bancaria">
+                                    </div>
+                                    <div class="grid-item">
+                                        <label for="numRuta" class="form-label">Número de Ruta:</label>
+                                        <input type="text" id="numRuta" name="numRuta" class="form-control" placeholder="Número de ruta bancaria">
+                                    </div>
+                                    <div class="grid-item">
+                                        <label for="nombreBanco" class="form-label">Nombre del Banco:</label>
+                                        <input type="text" id="nombreBanco" name="nombreBanco" class="form-control" placeholder="Nombre del banco">
+                                    </div>
+                                    <div class="grid-item">
+                                        <label for="titularCuenta" class="form-label">Titular de la Cuenta:</label>
+                                        <input type="text" id="titularCuenta" name="titularCuenta" class="form-control" placeholder="Nombre del titular de la cuenta">
+                                    </div>
+                                    <div class="grid-item">
+                                        <label for="socialCuenta" class="form-label">Número Social (Cuenta):</label>
+                                        <input type="text" id="socialCuenta" name="socialCuenta" class="form-control" placeholder="SSN del titular de la cuenta" maxlength="11">
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="pagoTarjetaContainer" class="grid-item full-width">
+                                <h3>Datos de Tarjeta</h3>
+                                <div class="form-grid">
+                                    <div class="grid-item">
+                                        <label for="numTarjeta" class="form-label">Número de Tarjeta:</label>
+                                        <input type="text" id="numTarjeta" name="numTarjeta" class="form-control" placeholder="XXXX XXXX XXXX XXXX" maxlength="20">
+                                    </div>
+                                    <div class="grid-item">
+                                        <label for="fechaVencimiento" class="form-label">Fecha de Vencimiento:</label>
+                                        <input type="text" id="fechaVencimiento" name="fechaVencimiento" class="form-control" placeholder="MM/AA" maxlength="5" pattern="\d{2}/\d{2}">
+                                    </div>
+                                    <div class="grid-item">
+                                        <label for="cvc" class="form-label">CVC/CVV:</label>
+                                        <input type="text" id="cvc" name="cvc" class="form-control" placeholder="XXX" maxlength="4" pattern="\d{3}">
+                                    </div>
+                                    <div class="grid-item full-width">
+                                        <label for="titularTarjeta" class="form-label">Nombre del Titular de la Tarjeta:</label>
+                                        <input type="text" id="titularTarjeta" name="titularTarjeta" class="form-control" placeholder="Nombre completo del titular">
+                                    </div>
+                                    <div class="grid-item">
+                                        <label for="observaciones" class="form-label">Observaciones:</label>
+                                        <textarea id="pagoObservacionesTarjeta" name="pagoObservacionesTarjeta" class="form-control" rows="4" placeholder="Escribe tus observaciones aquí..."></textarea>
+                                    </div>
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                    <div class="siguiente">
+                        <button type="button" class="btn btn-siguiente" id="btnSiguienteDocumentos">Siguiente</button>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="tab-documentos">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Documentos y Audio</h2>
+                        </div>
+                        <div class="card-body form-grid" id="customUploadContainer">
+                            <div class="grid-item full-width">
+                                <button type="button" class="btn btn-primary" id="addUploadFieldBtn">Agregar archivo</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-action">
+                        <button type="submit" id="submitBtn" class="btn btn-primary">Enviar datos</button>
+                        <div class="draft-controls">
+                            <button type="button" id="saveDraftBtn" class="btn btn-secondary">
+                                💾 Guardar borrador
+                            </button>
+                            <button type="button" id="draftMenuBtn" class="btn btn-outline-secondary" onclick="toggleDraftMenu()" title="Opciones de borrador">
+                                ▼
+                            </button>
+                            <div id="draftMenu" class="draft-menu" style="display: none;">
+                                <button type="button" onclick="loadDraft()" class="draft-menu-item">
+                                    📂 Cargar borrador
+                                </button>
+                                <button type="button" onclick="deleteDraft()" class="draft-menu-item">
+                                    🗑️ Eliminar borrador
+                                </button>
+                                <button type="button" onclick="clearDraft()" class="draft-menu-item">
+                                    ❌ Limpiar formulario
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+    <!-- Mensaje de estado flotante -->
+    <div id="statusMessage" class="status-message" style="display: none;"></div>
+
+    <script type="module" src="formulario.js"></script>
+</body>
+<footer>
+    <p>&copy; 2025 Asesoriasth. Todos los derechos reservados. versión 1.5</p>
+</footer>
+</html>
