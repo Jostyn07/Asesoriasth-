@@ -117,19 +117,19 @@
                             </div>
                             <div class="grid-item full-width button-dependent-section">
                                 <button type="button" id="addDependentsBtn" class="btn btn-primary">Agregar dependiente</button>
-                                <button type="button" id="editDependentsBtn" class="btn btn-secondary">Editar dependiente</button>
                             </div>
                         </div>
                     </div>
-                    <div id="dependentsModal" class="modal" style="display: none;">
-                        <div class="modal-dialog">
-                            <div class="modal-header">
-                                <h3>Dependientes</h3>
-                                <button type="button" class="close-button btn btn-secondary" id="closeDependentsModal">Cerrar</button>
-                            </div>
-
-                            <div class="modal-body">
-                                <div id="modalDependentsContainer"></div>
+                    
+                    <!-- Contenedor inline para dependientes -->
+                    <div class="card" id="dependentsInlineContainer" style="display: none;">
+                        <div class="card-header">
+                            <h2>Dependientes</h2>
+                        </div>
+                        <div class="card-body">
+                            <div id="dependentsContainer"></div>
+                            <div class="grid-item full-width button-dependent-section" style="margin-top: 20px;">
+                                <button type="button" id="addAnotherDependent" class="btn btn-primary">Añadir otro dependiente</button>
                             </div>
                         </div>
                     </div>
@@ -343,7 +343,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h2>Metodo de pago</h2>
-                            <button id="clearPaymentBtn" class="btn btn-danger" style="position: absolute; right: 10px; top: 10px">Limpiar</button>
+                            <button type="button" id="clearPaymentBtn" class="btn btn-danger" style="position: absolute; right: 10px; top: 10px">Limpiar</button>
                         </div>
                         <div class="card-body form-grid">
                             <div class="grid-item full-width">
@@ -457,4 +457,3 @@
     <p>&copy; 2025 Asesoriasth. Todos los derechos reservados. versión 1.5</p>
 </footer>
 </html>
-
