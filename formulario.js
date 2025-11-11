@@ -534,15 +534,15 @@ function initTabs() {
   if (first) activate(first);
 }
 
-// ========================== Dependientes (modal) ==========================
+// ========================== Dependientes (inline) ==========================
 window.currentDependentsData = window.currentDependentsData || [];
 
-function openDependentsModal() {
-  const modal = $("#dependentsModal");
-  const container = $("#modalDependentsContainer");
-  if (!modal || !container) return;
+function openDependentsInline() {
+  const container = $("#dependentsContainer");
+  const inlineContainer = $("#dependentsInlineContainer");
+  if (!container || !inlineContainer) return;
 
-  //intenta restaurar borrador
+  // Intentar restaurar borrador
   const draft = localStorage.getItem('dependentsDraft');
   if (draft) {
     try {
@@ -551,38 +551,38 @@ function openDependentsModal() {
       window.currentDependentsData = [];
     }
   }
+  
+  // Limpiar y cargar dependientes
   container.innerHTML = "";
   if (window.currentDependentsData.length) {
     window.currentDependentsData.forEach((d) => addDependentField(d));
   } else {
-    addDependentField();
+    addDependentField(); // Agregar un dependiente vacío
   }
 
   const desired = parseInt($("#cantidadDependientes")?.value || "0", 10);
   if (Number.isFinite(desired) && desired >= 0) ensureDependentsCards(desired);
 
-  modal.style.display = "block";
+  // Mostrar el contenedor
+  inlineContainer.style.display = "block";
   updateDependentsCount();
-}
-
-function closeDependentsModal() {
-  const modal = $("#dependentsModal");
-  if (modal) modal.style.display = "none";
+  
+  // Hacer scroll al contenedor de dependientes
+  inlineContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function updateDependentsCount() {
   const cant = $("#cantidadDependientes");
-  const container = $("#modalDependentsContainer");
+  const container = $("#dependentsContainer");
   if (!cant || !container) return;
   cant.value = String(container.querySelectorAll(".dependent-item-formal").length);
 }
 
-function saveDependentsData() {
-  const container = $("#modalDependentsContainer");
+function saveDependentsData(silent = false) {
+  const container = $("#dependentsContainer");
   if (!container) return;
   const items = container.querySelectorAll(".dependent-item-formal");
   const data = [];
-  let ok = true;
 
   items.forEach((card, i) => {
     const nombre = card.querySelector(".dependent-nombre")?.value.trim();
@@ -591,40 +591,33 @@ function saveDependentsData() {
     const parentesco = card.querySelector(".dependent-parentesco")?.value || "";
     const ssn = card.querySelector(".dependent-ssn")?.value.trim() || "";
     const estadoMigratorio = card.querySelector(`.dependent-estado-migratorio`)?.value || "";
-
-    if (fechaNacimiento && !/^\d{2}\/\d{2}\/\d{4}$/.test(fechaNacimiento)) {
-      ok = false;
-      alert(`Formato de fecha incorrecto para Dependiente #${i+1}. Use MM/DD/AAAA.`);
-      return;
-    }
-
     const aplica = card.querySelector(".dependent-aplica")?.value || "";
-    if (!nombre || !apellido || !fechaNacimiento || !parentesco || !aplica) {
-      ok = false;
-      alert(`Completa los campos requeridos para el Dependiente #${i+1}.`);
-      return;
+
+    // Solo guardar si tiene datos (permite dependientes incompletos en auto-guardado)
+    if (nombre || apellido || fechaNacimiento || parentesco) {
+      data.push({
+        nombre,
+        apellido,
+        fechaNacimiento,
+        parentesco,
+        ssn,
+        aplica,
+        estadoMigratorio
+      });
     }
-    data.push({
-      nombre,
-      apellido,
-      fechaNacimiento,
-      parentesco,
-      ssn,
-      aplica,
-      estadoMigratorio
-    });
   });
-  if (!ok) return;
 
   window.currentDependentsData = data;
-  localStorage.setItem('dependentsDraft', JSON.stringify(data)); // <-- Guarda el draft
+  localStorage.setItem('dependentsDraft', JSON.stringify(data));
   updateDependentsCount();
-  closeDependentsModal();
-  showStatus(`✅ ${data.length} dependiente(s) guardado(s)`, "success");
+  
+  if (!silent) {
+    showStatus(`✅ ${data.length} dependiente(s) guardado(s)`, "success");
+  }
 }
 
 function saveDependentsDraft() {
-  const container = document.getElementById("modalDependentsContainer");
+  const container = document.getElementById("dependentsContainer");
   if (!container) return;
   const items = container.querySelectorAll(".dependent-item-formal");
   const data = [];
@@ -649,8 +642,15 @@ function saveDependentsDraft() {
   localStorage.setItem('dependentsDraft', JSON.stringify(data));
 }
 function addDependentField(existingData = null) {
-  const container = $("#modalDependentsContainer");
+  const container = $("#dependentsContainer");
   if (!container) return;
+  
+  // Mostrar el contenedor de dependientes si estaba oculto
+  const inlineContainer = $("#dependentsInlineContainer");
+  if (inlineContainer) {
+    inlineContainer.style.display = "block";
+  }
+  
   const idx = container.children.length;
   const d = existingData || {
     nombre: "",
@@ -751,19 +751,27 @@ function addDependentField(existingData = null) {
   updateDependentNumbers();
   updateDependentsCount();
 
+  // Auto-guardar cuando se modifiquen los campos (silencioso)
   card.querySelectorAll("input, select").forEach(el => {
-    el.addEventListener("input", saveDependentsDraft);
-    el.addEventListener("change", saveDependentsDraft);
+    el.addEventListener("input", () => saveDependentsData(true)); // true = silent
+    el.addEventListener("change", () => saveDependentsData(true)); // true = silent
   });
 }
 
 function removeDependentField(buttonOrCard) {
-  const container = $("#modalDependentsContainer");
+  const container = $("#dependentsContainer");
   if (!container) return;
   const item = buttonOrCard.closest?.(".dependent-item-formal") || buttonOrCard;
   if (!item) return;
   if (container.children.length <= 1) {
-    alert("Debe mantener al menos un dependiente en el formulario.");
+    // Si es el último dependiente, ocultar el contenedor
+    const inlineContainer = $("#dependentsInlineContainer");
+    if (inlineContainer) {
+      inlineContainer.style.display = "none";
+    }
+    container.innerHTML = "";
+    updateDependentsCount();
+    showStatus("Se eliminó el último dependiente", "info");
     return;
   }
   item.remove();
@@ -772,7 +780,7 @@ function removeDependentField(buttonOrCard) {
 }
 
 function updateDependentNumbers() {
-  const container = $("#modalDependentsContainer");
+  const container = $("#dependentsContainer");
   if (!container) return;
   container.querySelectorAll(".dependent-item-formal").forEach((it, i) => {
     it.setAttribute("data-index", i);
@@ -788,6 +796,8 @@ function setupDependentValidation(card) {
       el.classList.toggle("valid", !!el.value.trim());
     });
   });
+  
+  // Formateo de SSN
   const ssn = card.querySelector(".dependent-ssn");
   if (ssn) {
     ssn.addEventListener("input", (e) => {
@@ -797,10 +807,37 @@ function setupDependentValidation(card) {
       else e.target.value = `${v.slice(0, 3)}-${v.slice(3, 5)}-${v.slice(5)}`;
     });
   }
+  
+  // Formateo de fecha MM/DD/AAAA
+  const fechaInput = card.querySelector(".dependent-fecha");
+  if (fechaInput) {
+    fechaInput.addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      let formattedValue = '';
+      if (value.length > 0) {
+        formattedValue = value.substring(0, 2);
+        if (value.length > 2) {
+          formattedValue += '/' + value.substring(2, 4);
+        }
+        if (value.length > 4) {
+          formattedValue += '/' + value.substring(4, 8);
+        }
+      }
+      e.target.value = formattedValue;
+    });
+    
+    fechaInput.addEventListener('blur', function(e) {
+      const value = e.target.value.replace(/\D/g, '');
+      if (value.length > 0 && value.length !== 8) {
+        e.target.value = '';
+        showStatus("Formato de fecha incorrecto. Use MM/DD/AAAA.", 'error');
+      }
+    });
+  }
 }
 
 function ensureDependentsCards(n) {
-  const container = $("#modalDependentsContainer");
+  const container = $("#dependentsContainer");
   if (!container) return;
   const cur = container.querySelectorAll(".dependent-item-formal").length;
   if (n > cur) {
@@ -853,16 +890,25 @@ function initPayment() {
 
   const clearPaymentBtn = $("#clearPaymentBtn");
   if (clearPaymentBtn) {
-    clearPaymentBtn.addEventListener("click", () => {
+    clearPaymentBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      
+      // Pedir confirmación antes de limpiar
+      if (!confirm("¿Estás seguro que deseas limpiar todos los datos de pago?")) {
+        return; // No hacer nada si el usuario cancela
+      }
+      
       rbBanco.checked = false;
       rbTarjeta.checked = false;
       refresh();
 
       const bankInputs = boxBanco.querySelectorAll("input");
       const cardInputs = boxTarjeta.querySelectorAll("input");
+      const observacionesTarjeta = $("#pagoObservacionesTarjeta");
 
       bankInputs.forEach(input => input.value = "");
       cardInputs.forEach(input => input.value = "");
+      if (observacionesTarjeta) observacionesTarjeta.value = "";
 
       showStatus("✅ Datos de pago limpiados", "success");
     });
@@ -932,6 +978,74 @@ function attachDateInputMask(selector) {
           e.target.value = '';
           showStatus("Formato de fecha incorrecto. Use MM/DD/AAAA.", 'error');
       }
+  });
+}
+
+// Formateo de número de tarjeta (XXXX-XXXX-XXXX-XXXX)
+function attachCardNumberFormatting() {
+  const el = $("#numTarjeta");
+  if (!el) return;
+  
+  el.addEventListener('input', function(e) {
+    // Solo permitir números
+    let value = e.target.value.replace(/\D/g, '');
+    // Limitar a 16 dígitos
+    value = value.substring(0, 16);
+    let formattedValue = '';
+    
+    // Agregar guiones cada 4 dígitos
+    for (let i = 0; i < value.length; i++) {
+      if (i > 0 && i % 4 === 0) {
+        formattedValue += '-';
+      }
+      formattedValue += value[i];
+    }
+    
+    e.target.value = formattedValue;
+  });
+}
+
+// Formateo de fecha de vencimiento (MM/AA)
+function attachCardExpiryFormatting() {
+  const el = $("#fechaVencimiento");
+  if (!el) return;
+  
+  el.addEventListener('input', function(e) {
+    // Solo permitir números
+    let value = e.target.value.replace(/\D/g, '');
+    let formattedValue = '';
+    
+    if (value.length > 0) {
+      // Mes (MM)
+      formattedValue = value.substring(0, 2);
+      if (value.length > 2) {
+        // Agregar slash y año (AA)
+        formattedValue += '/' + value.substring(2, 4);
+      }
+    }
+    
+    e.target.value = formattedValue;
+  });
+  
+  el.addEventListener('blur', function(e) {
+    const value = e.target.value.replace(/\D/g, '');
+    // Validar que tenga 4 dígitos (MMAA)
+    if (value.length > 0 && value.length !== 4) {
+      e.target.value = '';
+      showStatus("Formato de fecha incorrecto. Use MM/AA.", 'error');
+    }
+  });
+}
+
+// Formateo de CVC/CVV (solo números, 3-4 dígitos)
+function attachCVCFormatting() {
+  const el = $("#cvc");
+  if (!el) return;
+  
+  el.addEventListener('input', function(e) {
+    // Solo permitir números, máximo 4 dígitos
+    let value = e.target.value.replace(/\D/g, '');
+    e.target.value = value.substring(0, 4);
   });
 }
 
@@ -1655,6 +1769,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   initUploads();
   initCignaPlans();
   attachDateInputMask('#fechaNacimiento');
+  attachCardNumberFormatting();
+  attachCardExpiryFormatting();
+  attachCVCFormatting();
 
   // ===== Configurar botones de borrador =====
   const saveDraftBtn = document.getElementById('saveDraftBtn');
@@ -1676,31 +1793,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   console.log('✅ Auto-guardado configurado');
 
   const addBtn = $("#addDependentsBtn");
-  const editBtn = $("#editDependentsBtn");
-  const closeBtn = $("#closeDependentsModal");
-  const modal = $("#dependentsModal");
-  const container = $("#modalDependentsContainer");
+  const addAnotherBtn = $("#addAnotherDependent");
+  const container = $("#dependentsContainer");
+  const inlineContainer = $("#dependentsInlineContainer");
   const cantidad = $("#cantidadDependientes");
 
-  if (addBtn) addBtn.addEventListener("click", openDependentsModal);
-  if (editBtn) editBtn.addEventListener("click", openDependentsModal);
-  if (closeBtn) closeBtn.addEventListener("click", closeDependentsModal);
-  if (modal) modal.addEventListener("click", (e) => {
-    if (e.target === modal) closeDependentsModal();
-  });
-
-  const modalBody = modal?.querySelector(".modal-body");
-  if (modalBody && !modalBody.querySelector("#addDependent") && !modalBody.querySelector("#saveDependentsBtn")) {
-    const actions = document.createElement("div");
-    actions.className = "grid-item full-width button-dependent-section";
-    actions.innerHTML = `
-          <button type="button" id="addDependent" class="btn btn-primary">Añadir otro</button>
-          <button type="button" id="saveDependentsBtn" class="btn btn-success">Guardar</button>
-      `;
-    modalBody.appendChild(actions);
-  }
-  if ($("#addDependent")) $("#addDependent").addEventListener("click", () => addDependentField());
-  if ($("#saveDependentsBtn")) $("#saveDependentsBtn").addEventListener("click", saveDependentsData);
+  if (addBtn) addBtn.addEventListener("click", openDependentsInline);
+  if (addAnotherBtn) addAnotherBtn.addEventListener("click", () => addDependentField());
 
   if (container) {
     container.addEventListener("click", (e) => {
@@ -1708,13 +1807,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (btn) removeDependentField(btn);
     });
   }
+  
   if (cantidad) {
     cantidad.addEventListener("change", () => {
       const n = Math.max(0, parseInt(cantidad.value || "0", 10) || 0);
-      const container = document.getElementById("modalDependentsContainer");
+      const container = document.getElementById("dependentsContainer");
       if (n === 0) {
         // Elimina todos los dependientes del DOM y del draft
         if (container) container.innerHTML = "";
+        if (inlineContainer) inlineContainer.style.display = "none";
         window.currentDependentsData = [];
         localStorage.removeItem("dependentsDraft");
       } else {
@@ -1736,17 +1837,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
   }
-function closeDependentsModal() {
-  const modal = $("#dependentsModal");
-  const cantidad = $("#cantidadDependientes");
-  if (modal) modal.style.display = "none";
-  if (cantidad && parseInt(cantidad.value, 10) === 0) {
-    const container = document.getElementById("modalDependentsContainer");
-    if (container) container.innerHTML = "";
-    window.currentDependentsData = [];
-    localStorage.removeItem("dependentsDraft");
-  }
-}
 
   // Configurar evento del formulario principal
   const dataForm = document.getElementById('dataForm');
